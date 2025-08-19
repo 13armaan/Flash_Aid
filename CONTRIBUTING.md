@@ -1,0 +1,3 @@
+-Use issues for bugs/features
+-Create feature branches and open PRs.
+-Run 'make test' before pushing.
