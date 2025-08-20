@@ -1,7 +1,7 @@
 import os, sqlalchemy as sa 
 from dotenv import load_dotenv
 load_dotenv()
-url=os.environ["mysql+pymysql://3NQTVgu2sbfX44c.root:5gQcWbpt1V7NYdVE@gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/test?ssl_ca=/home/armaan-sharma/projects/ai_health_navigator/certs/ca.pem&ssl_verify_cert=true&ssl_verify_identity=true"]
+url=os.environ["TIDB_DATABASE_URL"]
 engine=sa.create_engine(url,pool_recycle=300)
 schema= """
 CREATE DATABASE IF NOT EXISTS ai_rag;
@@ -21,12 +21,12 @@ CREATE TABLE IF NOT EXISTS chunks (
     doc_id BIGINT,
     seq INT,
     text MEDIUMTEXT,
-    FORIEGN KEY(doc_id) REFERENCES documents(id)
+    FOREIGN KEY(doc_id) REFERENCES documents(id)
 );
 CREATE TABLE IF NOT EXISTS embeddings(
     chunk_id BIGINT PRIMARY KEY,
     vec VECTOR(384),
-    FOREIGN KEY (chunk_id) REFERENCES chunk(id)
+    FOREIGN KEY (chunk_id) REFERENCES chunks(id)
 );
 CREATE TABLE IF NOT EXISTS faq(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
