@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS queries(
     metadata JSON
 );
 ALTER TABLE embeddings SET TIFLASH REPLICA 1;
+DROP INDEX IF EXISTS idx_vec ON embeddings;
 CREATE VECTOR INDEX IF NOT EXISTS idx_vec ON embeddings((VEC_COSINE_DISTANCE(vec))) USING HNSW;
 """
 
