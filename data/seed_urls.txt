@@ -1,20 +1,26 @@
-#---WHO SEARO / WHO INDIA
-https://iris.who.int/bitstream/handle/10665/352685/9789290229049-eng.pdf?sequence=1   # India Health System Review
-https://cdn.who.int/media/docs/default-source/searo/css/jpp-guidelines_-feb-2023.pdf?sfvrsn=44ce9442_1  # WHO SEARO: Community health guidelines
-https://www.who.int/india/emergencies/diseases/dengue/dengue-fact-sheet  # Dengue in India
-https://www.who.int/india/health-topics/malaria/fact-sheets/malaria  # Malaria facts (India context)
 
-#---NHS First Aid
-https://www.nhs.uk/conditions/first-aid/  # NHS first aid overview
-https://www.nhs.uk/live-well/healthy-body/first-aid-basics/  # Basics of first aid
-https://www.nhs.uk/conditions/burns-and-scalds/  # Burns & scalds
-https://www.nhs.uk/conditions/bleeding/  # Severe bleeding
-https://www.nhs.uk/conditions/choking/  # Choking first aid
+ 
+https://cdn.who.int/media/docs/default-source/searo/css/jpp-guidelines_-feb-2023.pdf?sfvrsn=44ce9442_1  
+https://www.cdc.gov/dengue/signs-symptoms/index.html  
+https://www.cdc.gov/malaria/prevention/index.html
+
+https://www.nhs.uk/conditions/first-aid/  
+https://www.nhs.uk/live-well/bone-health/keep-your-bones-strong-over-65/
+https://www.nhs.uk/conditions/burns-and-scalds/  
+https://www.nhs.uk/conditions/high-blood-pressure/
+https://www.nhs.uk/conditions/cuts-and-grazes/
+https://www.nhs.uk/conditions/heart-attack/symptoms/
+https://www.nhs.uk/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/
 
 
-#--- CDC
-https://www.cdc.gov/dengue/signs-symptoms/index.html  # Dengue symptoms
-https://www.cdc.gov/first-aid/basics/index.html  # First aid basics (CDC)
 
-#---OGD INDIA
-https://data.gov.in/resource/number-government-hospitals-india  # Hospitals in India
+https://www.cdc.gov/dengue/signs-symptoms/index.html  
+https://www.cdc.gov/malaria/prevention/index.html
+
+https://data.gov.in/resource/number-government-hospitals-india  
+
+
+
+
+
+
