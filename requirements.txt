@@ -3,3 +3,9 @@ requests
 beautifulsoup4
 python-dotenv
 tqdm
+sentence-transformers
+numpy
+rich
+ollama
+pandas
+

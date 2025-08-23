@@ -1,7 +1,7 @@
 import os,sys,sqlalchemy as sa 
 from sqlalchemy import text as sql
 from dotenv import load_dotenv
-from sentence_transformwers import SentenceTransformer
+from sentence_transformers import SentenceTransformer
 import numpy as np
 from rich.console import Console
 from rich.markdown import Markdown
@@ -21,21 +21,19 @@ def retrieve(q):
     qv=vec_literal(q)
     with engine.begin() as cx:
         rows=cx.exec_driver_sql(
-            """
-            SELECT c.text, d.title, d.url, d.soutrce
-            FROM embeddings e JOIN chunks c ON e.chunk_id=c.id JOIN documents on d ON d.id=doc_id
-            ORDER BY VEC_COSINE_DISTANCE(e.vec,%s) LIMIT %s,
-            """ 
+            """            SELECT c.text, d.title, d.url, d.source
+            FROM embeddings e JOIN chunks c ON e.chunk_id=c.id JOIN documents d ON d.id=c.doc_id
+            ORDER BY VEC_COSINE_DISTANCE(e.vec,%s) LIMIT %s """ ,
             (qv,TOP_K)
         ).fetchall()
         if rows: return rows
 
-        roes=cx.exec_driver_sql(
-            """
+        rows=cx.exec_driver_sql(
+            """            
             SELECT c.text,d.title,d.url,d.source
             FROM chunks c JOIN documents d ON d.id=c.doc_id
-            WHERE c.text LIKE %s LIMIT %s
-            """
+            WHERE c.text LIKE %s LIMIT %s 
+            """,
             (f"%{q.split()[0]}%",TOP_K)
         ).fetchall()
         return rows
@@ -53,11 +51,11 @@ def build_prompt(q,rows):
         Explicity say this is not medical advice
         """
     )
-    return instructions +"\n\nCotext:\n" + "\n\n" .join(ctx) + f"\n\Questions:{q}\n"
+    return instructions +"\n\nContext:\n" + "\n\n".join(ctx) + f"\n\nQuestions:{q}\n"
 def call_llm(prompt):
     try:
         import ollama,os
-        host =os.getenv("OLLAMA_HOSt","http://127.0.0.1:11434")
+        host =os.getenv("OLLAMA_HOST","http://127.0.0.1:11434")
         client =ollama.Client(host=host)
         res=client.chat(model="llama3.1:8b", messages=[{"role":"user","content":prompt}])
         return res["message"]["content"].strip()
