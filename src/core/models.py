@@ -18,4 +18,6 @@ class AgentAnswer(BaseModel):
 class AgentQuery(BaseModel):
     question: str
     location_text:Optional[str]=None
+    lat:Optional[float]=None
+    lon:Optional[float]=None
     target_lang:str="en"

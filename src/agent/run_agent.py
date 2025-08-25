@@ -6,9 +6,13 @@ async def run_agent(q:AgentQuery) ->AgentAnswer:
     answer,cites=search_docs.synthesize(docs)
     steps=first_aid.maybe_get_steps(q.question)
     facilities=[]
-    if q.location_text:
-        facilities=await find_facility.lookup(q.location_text)
+    if q.lat and q.lon:
+        facilities=await find_facility.lookup(lat=q.lat,lon=q.lon)
+    elif q.location_text:
+        facilities=await find_facility.lookup(location_text=q.location_text)
+   
     result=AgentAnswer(answer=answer,citation=cites,emergency_steps=steps,facilities=facilities,language=q.target_lang)
     if q.target_lang !="en":
         result=await translate.translate_payload(result,target_lang=q.target_lang)
-    return result
+  
+   
