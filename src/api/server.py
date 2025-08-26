@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from core.models import AgentQuery
-from agent.agent import run_agent
+from src.core.models import AgentQuery
+from src.agent.run_agent import run_agent
 
 app=FastAPI()
 
