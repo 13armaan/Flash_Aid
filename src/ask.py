@@ -6,7 +6,8 @@ import numpy as np
 from rich.console import Console
 from rich.markdown import Markdown
 from safety import is_dangerous, disclaimer
-
+import requests
+import traceback
 console=Console()
 load_dotenv()
 TOP_K=int(os.getenv("TOP_K","5"))
@@ -52,16 +53,43 @@ def build_prompt(q,rows):
         """
     )
     return instructions +"\n\nContext:\n" + "\n\n".join(ctx) + f"\n\nQuestions:{q}\n"
-def call_llm(prompt):
+
+def call_llm(prompt: str, model: str = "kimi-k2-0711-preview") -> str:
     try:
-        import ollama,os
-        host =os.getenv("OLLAMA_HOST","http://127.0.0.1:11434")
-        client =ollama.Client(host=host)
-        res=client.chat(model="llama3.1:8b", messages=[{"role":"user","content":prompt}])
-        return res["message"]["content"].strip()
+        api_key = os.getenv("MOONSHOT_API_KEY")
+      
+        if not api_key:
+            return "(Moonshot LLM error) Missing API key. Set MOONSHOT_API_KEY."
+
+        base_url = os.getenv("MOONSHOT_BASE_URI", "https://api.moonshot.ai/v1")
+        endpoint = f"{base_url}/chat/completions"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}"
+        }
+
+        payload = {
+            "model": model,
+            "messages": [
+                {"role": "user",
+                 "content": prompt
+                 },
+                
+                 ]
+        }
+
+        resp = requests.post(endpoint, json=payload, headers=headers, timeout=30)
+      
+        resp.raise_for_status()
+        data = resp.json()
+        return data["choices"][0]["message"]["content"].strip()
+
     except Exception as e:
-        return f"(LLM unavailable) {e}\n\nHere are the most relevant sources:\n"+ prompt[:1200]
-    
+        print("LLM ERROR OCCURED")
+        print("Error:",e)
+        traceback.print_exc()
+        return f"(MOONSHOT LLM ERROR) {e}\n\nPrompt:\n{prompt[:1200]}"    
 def main():
     if len(sys.argv) < 2:
         print("Usage: python3 src/ask.py \"Your health question\"")
