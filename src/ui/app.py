@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 import streamlit.components.v1 as components
+import os
+from loguru import logger
 
 st.title("AI Health Navigator")
 query = st.text_input("Your Question")
@@ -35,6 +37,23 @@ if use_gps:
         lon=float(js_lon[0])
     else:
         st.info("Please allow GPS access and reload if necessary.")
+
+os.makedirs("logs", exist_ok=True)
+
+logger.add(
+    "logs/agent.log",
+     rotation="1 MB",
+      retention="10 days",
+      level="INFO"
+      )
+
+def log_query(query,tool_used,latency):
+    logger.info(f"tool={tool_used},latency={latency:.2f}s")
+
+consent=st.checkbox("Allow anonymized logging")
+
+blocklist=["suicide","self-harm"]
+
 if st.button("Ask"):
     payload={
         "question":query,
@@ -42,10 +61,16 @@ if st.button("Ask"):
         "target_language":language,
         "lat":lat,"lon":lon
         }
+    if any(word in query.lower() for word in blocklist):
+        st.error("Cannot provide advice on this topic. Please seek professional help")
     resp=requests.post("http://localhost:8000/agent",json=payload)
     data=resp.json()
     st.write("Answer:",data["answer"])
     if data["facilities"]:
         for f in data["facilities"]:
             st.write(f"{f['name']} - {f['distance_km']} km [MAP]({f['map_url']})")
-            
+    
+    if consent:
+        log_query(query,"search_docs",0.12)  
+
+st.warning("THIS IS NOT A SUBSTITUTE FOR PROFESSIONAL MEDICAL ADVICE. SEEK PROFFESINAL CARE WHEN NEEDED.")
