@@ -63,13 +63,23 @@ if st.button("Ask"):
         }
     if any(word in query.lower() for word in blocklist):
         st.error("Cannot provide advice on this topic. Please seek professional help")
-    resp=requests.post("http://localhost:8000/agent",json=payload)
-    data=resp.json()
-    st.write("Answer:",data["answer"])
-    if data["facilities"]:
-        for f in data["facilities"]:
-            st.write(f"{f['name']} - {f['distance_km']} km [MAP]({f['map_url']})")
-    
+    resp=requests.post("http://localhost:8000/ask",json=payload)
+    if resp==None:
+        st.write("Connected with backend but no data recieved")
+    else:
+        data=resp.json()
+        if data:
+            if "answer" in data:
+                st.write("Answer:", data["answer"])
+        
+            facilities=data.get("facilities")
+            if facilities:
+                for f in data["facilities"]:
+                     st.write(f"{f['name']} - {f['distance_km']} km [MAP]({f['map_url']})")
+            else:
+                st.warning("No answer returned from backend.")
+        else:
+            st.warning("No answer returned from backend.")
     if consent:
         log_query(query,"search_docs",0.12)  
 

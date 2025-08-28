@@ -4,7 +4,7 @@ from core.models import AgentQuery,AgentAnswer
 async def run_agent(q:AgentQuery) ->AgentAnswer:
     docs=await search_docs.search(q.question)
     answer,cites=search_docs.synthesize(docs)
-    steps=first_aid.maybe_get_steps(q.question)
+    steps=await first_aid.maybe_get_steps(q.question)
     facilities=[]
     if q.lat and q.lon:
         facilities=await find_facility.lookup(lat=q.lat,lon=q.lon)
