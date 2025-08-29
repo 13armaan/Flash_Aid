@@ -3,7 +3,7 @@ import logging
 from core.models import AgentQuery
 from core.models import AgentAnswer
 from agent.run_agent import run_agent
-
+import   traceback
 app=FastAPI()
 
 @app.get("/")
@@ -16,7 +16,16 @@ async def agent_endpoint(q:AgentQuery):
     Main endpoint: pass in your query
     """
     try:
-        return await run_agent(q)
+        result= await run_agent(q)
+        if not result:
+            return AgentAnswer(
+                answer="Sorry, I couldnt process your question",
+                citations=[],
+                emergency_steps=[],
+                facilities=[],
+                language="en"
+            )
+        return result
     except Exception as e:
         logging.error("Error in /ask endpoint: %s",e)
         traceback.print_exc()

@@ -77,9 +77,9 @@ if st.button("Ask"):
                 for f in data["facilities"]:
                      st.write(f"{f['name']} - {f['distance_km']} km [MAP]({f['map_url']})")
             else:
-                st.warning("No answer returned from backend.")
+                st.warning("No answer returned from Backend.")
         else:
-            st.warning("No answer returned from backend.")
+            st.warning("No Answer returned from backend.")
     if consent:
         log_query(query,"search_docs",0.12)  
 

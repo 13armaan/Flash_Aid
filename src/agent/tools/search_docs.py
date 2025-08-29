@@ -27,6 +27,9 @@ def retrieve(q):
             ORDER BY VEC_COSINE_DISTANCE(e.vec,%s) LIMIT %s """ ,
             (qv,TOP_K)
         ).fetchall()
+        cites=[]
+        for i,(text,title,url,src) in enumerate(rows,start=1):
+            cites.append(f"[{i}] {title} - {url}")
         if rows: return [{
             "text":r[0],
             "title":r[1],
@@ -34,7 +37,7 @@ def retrieve(q):
             "source":r[3]    
         }
         for r in rows
-        ]
+        ],cites
 
         rows=cx.exec_driver_sql(
             """            
@@ -44,9 +47,7 @@ def retrieve(q):
             """,
             (f"%{q.split()[0]}%",TOP_K)
         ).fetchall()
-        cites=[]
-        for i,(text,title,url,src) in enumerate(rows,start=1):
-            cites.append(f"[{i}] {title} - {url}")
+        
         return [{
             "text":r[0],
             "title":r[1],

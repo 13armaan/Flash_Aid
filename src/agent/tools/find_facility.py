@@ -17,7 +17,7 @@ async def lookup(location_text:str=None,lat:float=None,lon:float=None):
     
     query=f"""
     [out:json];
-    node["amenity"~"clinic|hospital"](around:3000,{lat},{lon});
+    node["amenity"~"clinic|hospital"](around:5000,{lat},{lon});
     out center;
 """
     res=overpass.query(query)
