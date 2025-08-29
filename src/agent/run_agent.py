@@ -1,10 +1,10 @@
-from .tools import search_docs, first_aid, find_facility, translate
+from .tools import search_docs, first_aid, find_facility, translate, build_prompt
 from core.models import AgentQuery,AgentAnswer
 
 async def run_agent(q:AgentQuery) ->AgentAnswer:
-    docs=await search_docs.search(q.question)
-    answer,cites=search_docs.synthesize(docs)
-    steps=await first_aid.maybe_get_steps(q.question)
+    content,cites=search_docs.retrieve(q.question)
+    prompt=build_prompt.prompt(q.question,content)
+    answer=call_llm.call(prompt)
     facilities=[]
     if q.lat and q.lon:
         facilities=await find_facility.lookup(lat=q.lat,lon=q.lon)
