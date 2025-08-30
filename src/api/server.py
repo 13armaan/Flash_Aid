@@ -17,14 +17,14 @@ async def agent_endpoint(q:AgentQuery):
     """
     try:
         result= await run_agent(q)
-        if not result:
-            return AgentAnswer(
-                answer="Sorry, I couldnt process your question",
-                citations=[],
-                emergency_steps=[],
-                facilities=[],
-                language="en"
-            )
+       # if not result:
+           # return AgentAnswer(
+        #    answer="Sorry, I couldnt process your question",
+        #    citations=[],
+        #    emergency_steps=[],
+        #    facilities=[],
+        #    language="en"
+        #)
         return result
     except Exception as e:
         logging.error("Error in /ask endpoint: %s",e)

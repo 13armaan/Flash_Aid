@@ -8,6 +8,7 @@ from rich.markdown import Markdown
 from safety import is_dangerous, disclaimer
 import requests
 import traceback
+from core.models import citation
 console=Console()
 load_dotenv()
 TOP_K=int(os.getenv("TOP_K","5"))
@@ -29,7 +30,10 @@ def retrieve(q):
         ).fetchall()
         cites=[]
         for i,(text,title,url,src) in enumerate(rows,start=1):
-            cites.append(f"[{i}] {title} - {url}")
+            cites.append(citation(
+                title=f"{title}",
+                url=f"{url}"
+            ))
         if rows: return [{
             "text":r[0],
             "title":r[1],

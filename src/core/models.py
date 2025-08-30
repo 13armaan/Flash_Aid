@@ -1,6 +1,13 @@
 from pydantic import BaseModel
 from typing import List,Optional
 
+class citation(BaseModel):
+    title:str
+    url:str
+
+class step(BaseModel):
+    steps:list[str]
+
 class facility(BaseModel):
     name:str
     distance_km: float
@@ -10,8 +17,8 @@ class facility(BaseModel):
 
 class AgentAnswer(BaseModel):
     answer:str
-    citations:List [str]=[]
-    emergency_steps:List[str]=[]
+    citations:List [citation]=[]
+    emergency_steps:List[step]=[]
     facilities :List[facility]=[]
     language:str="en"
 
@@ -21,3 +28,4 @@ class AgentQuery(BaseModel):
     lat:Optional[float]=None
     lon:Optional[float]=None
     target_lang:str="en"
+

@@ -5,7 +5,7 @@ async def run_agent(q:AgentQuery) ->AgentAnswer:
     content,cites=search_docs.retrieve(q.question)
     prompt=build_prompt.prompt(q.question,content)
     answer=call_llm.call(prompt)
-    steps=await first_aid.steps(q)
+    steps=first_aid.steps(q.question)
     facilities=[]
     if q.lat and q.lon:
         facilities=await find_facility.lookup(lat=q.lat,lon=q.lon)
@@ -16,4 +16,5 @@ async def run_agent(q:AgentQuery) ->AgentAnswer:
     if q.target_lang !="en":
         result=await translate.translate_payload(result,target_lang=q.target_lang)
   
+    return result
    

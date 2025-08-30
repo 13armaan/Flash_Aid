@@ -31,7 +31,7 @@ def call(prompt: str, model: str = "kimi-k2-0711-preview") -> str:
                  ]
         }
 
-        resp = requests.post(endpoint, json=payload, headers=headers, timeout=30)
+        resp = requests.post(endpoint, json=payload, headers=headers, timeout=60)
       
         resp.raise_for_status()
         data = resp.json()

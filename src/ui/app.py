@@ -71,13 +71,21 @@ if st.button("Ask"):
         if data:
             if "answer" in data:
                 st.write("Answer:", data["answer"])
-        
+           
             facilities=data.get("facilities")
+            st.write("Nearby Facilities")
             if facilities:
                 for f in data["facilities"]:
                      st.write(f"{f['name']} - {f['distance_km']} km [MAP]({f['map_url']})")
             else:
                 st.warning("No answer returned from Backend.")
+            st.write("Citations:")
+            if "citations" in data:
+                 for f in data["citations"]:
+                     st.write(f"{f['title']} - {f['url']} ")
+            
+          
+           
         else:
             st.warning("No Answer returned from backend.")
     if consent:
