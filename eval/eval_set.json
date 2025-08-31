@@ -1,0 +1,137 @@
+[
+  {
+    "id": "q001",
+    "question": "What are common symptoms of dehydration?",
+    "expected_facts": [
+      "thirst",
+      "dry mouth",
+      "dark urine",
+      "fatigue",
+      "dizziness"
+    ],
+    "expected_citations": [
+      "https://www.nhs.uk/conditions/high-blood-pressure/",
+      "https://cdn.who.int/media/docs/default-source/searo/css/jpp-guidelines_-feb-2023.pdf?sfvrsn=44ce9442_1"
+    ]
+  },
+  {
+    "id": "q002",
+    "question": "How can you treat a minor burn at home?",
+    "expected_facts": [
+      "cool the burn with running water",
+      "cover with a clean cloth",
+      "avoid ice",
+      "do not break blisters"
+    ],
+    "expected_citations": [
+      "https://www.nhs.uk/conditions/burns-and-scalds/"
+    ]
+  },
+  {
+    "id": "q003",
+    "question": "When should someone with chest pain seek emergency care?",
+    "expected_facts": [
+      "if pain is severe",
+      "if pain spreads to arm, jaw, or back",
+      "if accompanied by shortness of breath",
+      "if accompanied by sweating or nausea"
+    ],
+    "expected_citations": [
+      "https://www.nhs.uk/conditions/heart-attack/symptoms/"
+    ]
+  },
+  {
+    "id": "q004",
+    "question": "What vaccines are recommended for children under 5?",
+    "expected_facts": [
+      "measles vaccine",
+      "polio vaccine",
+      "diphtheria, tetanus, pertussis vaccine",
+      "hepatitis B vaccine",
+      "BCG vaccine"
+    ],
+    "expected_citations": [
+      "https://cdn.who.int/media/docs/default-source/searo/css/jpp-guidelines_-feb-2023.pdf?sfvrsn=44ce9442_1"
+    ]
+  },
+  {
+    "id": "q005",
+    "question": "What are signs of a severe allergic reaction?",
+    "expected_facts": [
+      "difficulty breathing",
+      "swelling of face or throat",
+      "hives",
+      "rapid heartbeat",
+      "low blood pressure"
+    ],
+    "expected_citations": [
+      "https://www.nhs.uk/conditions/first-aid/"
+    ]
+  },
+  {
+    "id": "q006",
+    "question": "How can someone prevent food poisoning while cooking?",
+    "expected_facts": [
+      "wash hands before handling food",
+      "cook food to safe temperatures",
+      "avoid cross-contamination",
+      "refrigerate leftovers promptly"
+    ],
+    "expected_citations": [
+      "https://www.cdc.gov/malaria/prevention/index.html"
+    ]
+  },
+  {
+    "id": "q007",
+    "question": "What are the typical symptoms of dengue fever?",
+    "expected_facts": [
+      "high fever",
+      "severe headache",
+      "pain behind the eyes",
+      "muscle and joint pain",
+      "rash"
+    ],
+    "expected_citations": [
+      "https://www.cdc.gov/dengue/signs-symptoms/index.html"
+    ]
+  },
+  {
+    "id": "q008",
+    "question": "If a child is choking, what is the first aid response?",
+    "expected_facts": [
+      "encourage coughing if able",
+      "give up to 5 back blows",
+      "perform abdominal thrusts if necessary",
+      "call emergency services if blockage is not cleared"
+    ],
+    "expected_citations": [
+      "https://www.nhs.uk/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/"
+    ]
+  },
+  {
+    "id": "q009",
+    "question": "Where can patients in India access government hospitals?",
+    "expected_facts": [
+      "district hospitals",
+      "community health centers",
+      "primary health centers",
+      "urban health posts"
+    ],
+    "expected_citations": [
+      "https://data.gov.in/resource/number-government-hospitals-india"
+    ]
+  },
+  {
+    "id": "q010",
+    "question": "How can older adults keep their bones strong after age 65?",
+    "expected_facts": [
+      "regular weight-bearing exercise",
+      "adequate calcium intake",
+      "vitamin D supplementation",
+      "fall prevention measures"
+    ],
+    "expected_citations": [
+      "https://www.nhs.uk/live-well/bone-health/keep-your-bones-strong-over-65/"
+    ]
+  }
+]

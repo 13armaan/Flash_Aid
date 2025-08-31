@@ -1,5 +1,6 @@
 from .tools import search_docs, first_aid, find_facility, translate, build_prompt,call_llm
 from core.models import AgentQuery,AgentAnswer
+import time
 
 async def run_agent(q:AgentQuery) ->AgentAnswer:
     content,cites=search_docs.retrieve(q.question)
@@ -7,6 +8,7 @@ async def run_agent(q:AgentQuery) ->AgentAnswer:
     answer=call_llm.call(prompt)
     steps=first_aid.steps(q.question)
     facilities=[]
+    
     if q.lat and q.lon:
         facilities=await find_facility.lookup(lat=q.lat,lon=q.lon)
     elif q.location_text:

@@ -21,6 +21,7 @@ class AgentAnswer(BaseModel):
     emergency_steps:List[step]=[]
     facilities :List[facility]=[]
     language:str="en"
+    latency:Optional[float]=None
 
 class AgentQuery(BaseModel):
     question: str
