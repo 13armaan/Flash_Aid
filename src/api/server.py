@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import logging
 from core.models import AgentQuery
-from core.models import AgentAnswer
+from core.models import AgentAnswer , latencyEach
 from agent.run_agent import run_agent
 import   traceback
 import time
@@ -17,11 +17,11 @@ async def agent_endpoint(q:AgentQuery):
     Main endpoint: pass in your query
     """
     try:
-        start=time.perf_counter()
+      
 
         result= await run_agent(q)
-        latency=time.perf_counter()-start
-        result.latency=round(latency,3)
+        
+       
         if not result:
          return AgentAnswer(
          answer="Sorry, I couldnt process your question",

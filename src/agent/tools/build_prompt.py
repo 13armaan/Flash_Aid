@@ -1,6 +1,6 @@
 import sys
 
-def prompt(q:str,rows:list)->str:
+async def prompt(q:str,rows:list)->str:
     cites=[]
     ctx=[]
     for i,(text,title,url,src) in enumerate(rows,start=1):

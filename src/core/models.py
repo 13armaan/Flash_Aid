@@ -8,6 +8,11 @@ class citation(BaseModel):
 class step(BaseModel):
     steps:list[str]
 
+class latencyEach(BaseModel):
+    title:Optional[str]=None
+    time:Optional[float]=None
+  
+
 class facility(BaseModel):
     name:str
     distance_km: float
@@ -21,7 +26,7 @@ class AgentAnswer(BaseModel):
     emergency_steps:List[step]=[]
     facilities :List[facility]=[]
     language:str="en"
-    latency:Optional[float]=None
+    latency:List[latencyEach]=None
 
 class AgentQuery(BaseModel):
     question: str

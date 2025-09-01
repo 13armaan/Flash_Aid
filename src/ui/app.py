@@ -83,6 +83,10 @@ if st.button("Ask"):
             if "citations" in data:
                  for f in data["citations"]:
                      st.write(f"{f['title']} - {f['url']} ")
+            st.write("latency")
+            if "latency" in data:
+                for f in data["latency"]:
+                     st.write(f"{f['title']} - {f['time']} ")
             
           
            

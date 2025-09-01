@@ -1,8 +1,11 @@
 import requests,urllib.parse
+import httpx
 
-def nearest_clinic(location_query:str):
+async def nearest_clinic(location_query:str):
     q=urllib.parse.quote(location_query)
-    geo=requests.get(f"https://nominatim.openstreetmap.org/search?q={q}&format=json&limit=1",headers={"User-Agent":"ai_health_navigator/0.1"}).json()
+    async with httpx.AsyncClient(timeout=30) as client:
+        geo=await client.get(f"https://nominatim.openstreetmap.org/search?q={q}&format=json&limit=1",headers={"User-Agent":"ai_health_navigator/0.1"})
+        geo = geo.json()
 
     if not geo: return None
     lat,lon =geo[0]["lat"],geo[0]["lon"]
@@ -16,7 +19,8 @@ def nearest_clinic(location_query:str):
     );
     out center 5;
 """
-    r=requests.post("https://overpass-api.de/api/interpreter",data=overpass.encode("utf-8"))
+    async with httpx.AsyncClient(timeout=30) as client:
+       r=await client.post("https://overpass-api.de/api/interpreter",data=overpass.encode("utf-8"))
     data=r.json().get("elements",[])
     if not data :return None
     best=data[0]

@@ -2,7 +2,7 @@ from core.models import AgentAnswer
 import argostranslate.package
 import argostranslate.translate
 
-def install_package(from_code:str,to_code:str):
+async def install_package(from_code:str,to_code:str):
     available_packages=argostranslate.package.get_available_packages()
     package_to_install=next(
        (pkg for pkg in available_packages if pkg.from_code==from_code and pkg.to_code==to_code),

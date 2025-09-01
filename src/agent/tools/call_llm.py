@@ -3,10 +3,11 @@ import sys
 import requests
 import traceback
 from dotenv import load_dotenv
+import httpx
 
 load_dotenv()
 
-def call(prompt: str, model: str = "kimi-k2-0711-preview") -> str:
+async def call(prompt: str, model: str = "kimi-k2-0711-preview") -> str:
     try:
         api_key = os.getenv("MOONSHOT_API_KEY")
       
@@ -30,8 +31,8 @@ def call(prompt: str, model: str = "kimi-k2-0711-preview") -> str:
                 
                  ]
         }
-
-        resp = requests.post(endpoint, json=payload, headers=headers, timeout=60)
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(endpoint, json=payload, headers=headers)
       
         resp.raise_for_status()
         data = resp.json()
