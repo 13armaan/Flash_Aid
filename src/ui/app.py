@@ -3,6 +3,7 @@ import requests
 import streamlit.components.v1 as components
 import os
 from loguru import logger
+from streamlit_js_eval import streamlit_js_eval
 
 st.title("AI Health Navigator")
 query = st.text_input("Your Question")
@@ -13,28 +14,20 @@ use_gps=st.checkbox("Use my GPS location")
 lat,lon=None,None
 
 if use_gps:
-    st.markdown("open in browser with location access") #need to implement JS for this (later)
-    gps_html="""
-    <script>
-    navigator.geolocation.getCurrentPosition(
-        function(position){
-            const lat=position.coords.latitude;
-            const lon=position.coords.longitude;
-            document.querySelector('body').innerHTML +=
-            `<input type='hidden' id='lat' value='${lat}'>
-            <input type='hidden' id='lon' value='${lon}'>`;
-        },
-        function(error){alert ('GPS access denied or not available');}
-    );
-    </script>
-    """
-    components.html(gps_html)
+    coords=streamlit_js_eval(js_expressions="""
+    new Promise((resolve,reject)=>{
+        navigator.geolocation.getCurrentPosition(
+            (pos)=>resolve(`${pos.coords.latitude},${pos.coords.longitude}`),
+            (err)=>reject(err)
+        );   
+    
+    })""",key="get_coords")
 
-    js_lat=st.query_params.get("lat")
-    js_lon=st.query_params.get("lon")
-    if js_lat and js_lon:
-        lat=float(js_lat[0])
-        lon=float(js_lon[0])
+    if coords:
+        lat,lon=coords.split(",")
+        st.write("Latitude:", lat)
+        st.write("Longitude:", lon)
+           
     else:
         st.info("Please allow GPS access and reload if necessary.")
 
