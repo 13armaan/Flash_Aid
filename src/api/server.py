@@ -11,6 +11,7 @@ app=FastAPI()
 def root():
     return {"Message":"AI Health Navigator server is running"}
 
+    
 @app.post("/ask")
 async def agent_endpoint(q:AgentQuery):
     """

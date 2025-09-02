@@ -51,9 +51,10 @@ if st.button("Ask"):
     payload={
         "question":query,
         "location_text":location,
-        "target_language":language,
+        "target_lang":language,
         "lat":lat,"lon":lon
         }
+    print(payload)
     if any(word in query.lower() for word in blocklist):
         st.error("Cannot provide advice on this topic. Please seek professional help")
     resp=requests.post("http://localhost:8000/ask",json=payload)

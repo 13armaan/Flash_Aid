@@ -19,7 +19,8 @@ async def run_agent(q:AgentQuery) ->AgentAnswer:
     t4=time.perf_counter()
     lat.append(latencyEach(title="steps",time=round(t4-t3,3)))
     facilities=[]
-    
+    t5=None
+    t6=None
     if q.lat and q.lon:
         facilities=await find_facility.lookup(lat=q.lat,lon=q.lon)
         t5=time.perf_counter()
@@ -28,15 +29,23 @@ async def run_agent(q:AgentQuery) ->AgentAnswer:
         facilities=await find_facility.lookup(location_text=q.location_text)
         t6=time.perf_counter()
         lat.append(latencyEach(title="fac",time=round(t6-t4,3)))
-   
+    
     result=AgentAnswer(answer=answer,citations=cites,emergency_steps=steps,facilities=facilities,language=q.target_lang,latency=lat)
     if q.target_lang !="en":
-        result=await translate.translate_payload(result,target_lang=q.target_lang)
+        try:
+            await translate.install_package("en",q.target_lang)
+        except ValueError:
+            pass
+        tran= translate.translate_payload(result,"en",q.target_lang)
         t7=time.perf_counter()
         if t6:
             lat.append(latencyEach(title="transl",time=round(t7-t6,3)))
+            print(t6)
         elif t5:
             lat.append(latencyEach(title="transl",time=round(t7-t5,3)))
-  
+            print(t5)
+            result.answer=tran
+            result.language=q.target_lang
+            result.latency=lat
     return result
    

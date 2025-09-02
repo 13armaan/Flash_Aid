@@ -16,8 +16,12 @@ async def install_package(from_code:str,to_code:str):
 
 def translate_payload(ans:AgentAnswer,from_code:str,to_code:str)->str:
     installed_languages=argostranslate.translate.get_installed_languages()
-    from_lang=next(lang for lang in isntalled_languages if lang.code==from_code)
-    to_lang=next(lang for lang in isntalled_languages if lang.code==to_code)
+    from_lang=next((lang for lang in installed_languages if lang.code==from_code),None)
+    to_lang=next((lang for lang in installed_languages if lang.code==to_code),None)
+
+    if not from_lang or not to_lang:
+        raise ValueError(f"Missing language model for {from_code}-> {to_code}")
+       
 
     translation= from_lang.get_translation(to_lang)
     return translation.translate(ans.answer)
