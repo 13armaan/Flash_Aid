@@ -28,8 +28,8 @@ async def call(prompt: str, model: str = "kimi-k2-0711-preview") -> str:
                 {"role": "user",
                  "content": prompt
                  },
-                
-                 ]
+                ]
+                #"stream": True
         }
         async with httpx.AsyncClient(timeout=60) as client:
             resp = await client.post(endpoint, json=payload, headers=headers)

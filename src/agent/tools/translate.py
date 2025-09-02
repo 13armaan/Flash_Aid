@@ -1,6 +1,10 @@
 from core.models import AgentAnswer
 import argostranslate.package
 import argostranslate.translate
+from concurrent.futures import ThreadPoolExecutor
+import asyncio
+
+executor= ThreadPoolExecutor(max_workers=2)
 
 async def install_package(from_code:str,to_code:str):
     available_packages=argostranslate.package.get_available_packages()
@@ -25,3 +29,7 @@ def translate_payload(ans:AgentAnswer,from_code:str,to_code:str)->str:
 
     translation= from_lang.get_translation(to_lang)
     return translation.translate(ans.answer)
+
+async def async_translate(ans:AgentAnswer,from_code:str,to_code:str)->str:
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(executor,translate_payload,ans,from_code,to_code)

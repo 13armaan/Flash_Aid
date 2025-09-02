@@ -5,12 +5,26 @@ from core.models import AgentAnswer , latencyEach
 from agent.run_agent import run_agent
 import   traceback
 import time
+from concurrent.futures import ThreadPoolExecutor
+from agent.tools import translate
+
 app=FastAPI()
+
+
+INSTALLED_LANGUAGES=[]
 
 @app.get("/")
 def root():
     return {"Message":"AI Health Navigator server is running"}
 
+@app.on_event("startup")
+async def preload_packages():
+    global INSTALLED_LANGUAGES
+    try:
+        await translate.install_package("en","hi")
+        await translate.install_package("en","bn")
+    except Exception as e:
+        print("Erro loading packages",e)
     
 @app.post("/ask")
 async def agent_endpoint(q:AgentQuery):
