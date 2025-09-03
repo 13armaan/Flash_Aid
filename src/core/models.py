@@ -21,7 +21,7 @@ class facility(BaseModel):
     map_url:str
 
 class AgentAnswer(BaseModel):
-    answer:str
+    answer:str=""
     citations:List [citation]=[]
     emergency_steps:List[step]=[]
     facilities :List[facility]=[]

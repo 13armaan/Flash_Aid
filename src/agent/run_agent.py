@@ -3,8 +3,19 @@ from core.models import AgentQuery,AgentAnswer,latencyEach
 import time
 import  asyncio
 
-async def run_agent(q:AgentQuery) ->AgentAnswer:
-    lat=[]
+lat=[]
+
+async def run_agent_stream(q:AgentQuery):
+    search_task=asyncio.create_task( search_docs.retrieve(q.question))
+
+    content,cites=await search_task
+    prompt=await build_prompt.prompt(q.question,content)
+
+    async for token in call_llm.call_llm_stream(prompt,stream=True):
+        yield token
+    
+async def run_agent_normal(q:AgentQuery) ->AgentAnswer:
+   
     t0=time.perf_counter()
 
     search_task=asyncio.create_task( search_docs.retrieve(q.question))
@@ -18,11 +29,12 @@ async def run_agent(q:AgentQuery) ->AgentAnswer:
 
     content,cites=await search_task
     t1=time.perf_counter()
+    top_content=content[:3]
     lat.append(latencyEach(title="search",time=round(t1-t0,3)))
-    prompt=await build_prompt.prompt(q.question,content)
+    prompt=await build_prompt.prompt(q.question,top_content)
     t2=time.perf_counter()
     lat.append(latencyEach(title="prompt",time=round(t2-t1,3)))
-    answer=await  call_llm.call(prompt)
+    answer=await  call_llm.call_llm_normal(prompt)
     t3=time.perf_counter()
     lat.append(latencyEach(title="llm",time=round(t3-t2,3)))
     steps=await steps_task

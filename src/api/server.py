@@ -2,11 +2,13 @@ from fastapi import FastAPI
 import logging
 from core.models import AgentQuery
 from core.models import AgentAnswer , latencyEach
-from agent.run_agent import run_agent
+from agent.run_agent import run_agent_normal,run_agent_stream
 import   traceback
 import time
 from concurrent.futures import ThreadPoolExecutor
 from agent.tools import translate
+from fastapi.responses import StreamingResponse
+from fastapi import Query
 
 app=FastAPI()
 
@@ -27,27 +29,34 @@ async def preload_packages():
         print("Erro loading packages",e)
     
 @app.post("/ask")
-async def agent_endpoint(q:AgentQuery):
+async def agent_endpoint(q:AgentQuery,stream:bool=Query(False)):
+    
     """
     Main endpoint: pass in your query
     """
-    try:
-      
-
-        result= await run_agent(q)
+    if stream:
+        async def token_generator():
+            async for token in run_agent_stream(q):
+                yield token 
+                await asyncio.sleep(0)
+                print("token")
+        return StreamingResponse(token_generator(),media_type="text/plain")
+    else:
+        try:
         
-       
-        if not result:
-         return AgentAnswer(
-         answer="Sorry, I couldnt process your question",
-         citations=[],
-         emergency_steps=[],
-         facilities=[],
-         language="en",
-         latency=None
-    )
-        return result
-    except Exception as e:
-        logging.error("Error in /ask endpoint: %s",e)
-        traceback.print_exc()
-        return{"answer":"Something Went Wrong","citations":[],"emergency_steps":[],"facilities":[],"language":"en"}
+            result= await run_agent_normal(q)
+
+            if not result:
+             return AgentAnswer(
+             answer="Sorry, I couldnt process your question",
+             citations=[],
+             emergency_steps=[],
+             facilities=[],
+             language="en",
+             latency=None
+        )
+            return result
+        except Exception as e:
+            logging.error("Error in /ask endpoint: %s",e)
+            traceback.print_exc()
+            return{"answer":"Something Went Wrong","citations":[],"emergency_steps":[],"facilities":[],"language":"en"}
