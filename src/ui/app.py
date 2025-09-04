@@ -9,6 +9,7 @@ import asyncio
 import httpx
 import threading
 import re
+import json
 
 st.title("AI Health Navigator")
 query = st.text_input("Your Question")
@@ -56,14 +57,16 @@ def format_ans(text:str)->str:
     text=re.sub(r"\s*–\s*",r"\n–",text)
     text=re.sub(r"(\d+)\.\s*",r"\n\1.",text)
     text=re.sub(r"\s*:\s*",r":\n\n",text)
-    text=re.sub(r"\s*>\s*",r"\n>",text)
+    text=re.sub(r"\s*>\s*",r"\n\n>",text)
     
     text=text.strip()
     return text
 
 def fetch_stream(payload,placeholder):
     text=""
+    
     with requests.post("http://localhost:8000/ask?stream=true",json=payload,timeout=None,stream=True)as r:
+      
         for line in r.iter_lines():
             if line:
                 decoded =line.decode("utf-8")
@@ -71,10 +74,17 @@ def fetch_stream(payload,placeholder):
                     chunk= decoded.replace("data: ","")
                     if chunk =="[DONE]":
                         break
-                    text+=chunk
-                    formatted_ans=format_ans(text)
-                    
-                    placeholder.markdown(f"\n{formatted_ans}")
+                    try:
+                        message=json.loads(chunk)
+                    except json.JSONDecodeError:
+                        continue
+                    if message["type"]=="token":
+                        text+=chunk
+                        formatted_ans=format_ans(text)
+                        placeholder.markdown(f"\n{formatted_ans}")
+                    elif message["type"]=="metadata" and not metadata_shown:
+                         st.markdown(message["content"])
+
 
 consent=st.checkbox("Allow anonymized logging")
 

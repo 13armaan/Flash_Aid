@@ -4,15 +4,46 @@ import time
 import  asyncio
 
 
+def format_metadata(facilities,citations):
+    lines=[]
+    if facilities:
+        lines.append("📍 Nearby Facilities:")
+        for i, f in enumerate(facilities,start=1):
+            lines.append(f"{i}. {f.name} ({f.distance_km} km)")
+            lines.append(f"{f.map_url}")
+        lines.append("")
+    
+    if citations:
+        lines.append("📖 Citations:")
+        for i,c in enumerate(citations,start=1):
+            lines.append(f"[{i}] {c.title}")
+            lines.append(f"{c.url}")
+
+    return "\n".join(lines)
 
 async def run_agent_stream(q:AgentQuery):
     search_task=asyncio.create_task( search_docs.retrieve(q.question))
+    steps_task=asyncio.create_task(first_aid.steps(q.question))
+    fac_task=None
+    if q.lat and q.lon:
+        fac_task=asyncio.create_task(find_facility.lookup(lat=q.lat,lon=q.lon))
+    elif q.location_text:
+        fac_task=asyncio.create_task(find_facility.lookup(location_text=q.location_text))
+    
 
     content,cites=await search_task
     prompt=await build_prompt.prompt(q.question,content)
-
+    steps=await steps_task
+    if fac_task:
+        facs=await fac_task
     async for token in call_llm.call_llm_stream(prompt):
         yield token
+    
+    yield{
+        "type":"metadata",
+        "content": f"```markdown\n{format_metadata(facs, cites)}\n```"
+    }
+    
     
 async def run_agent_normal(q:AgentQuery) ->AgentAnswer:
     lat=[]

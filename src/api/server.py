@@ -42,6 +42,7 @@ async def agent_endpoint(q:AgentQuery,stream:bool=Query(False)):
                 await asyncio.sleep(0)
             yield "data: [DONE]\n\n"
         return StreamingResponse(token_generator(),media_type="text/event-stream")
+        
     else:
         try:
         
