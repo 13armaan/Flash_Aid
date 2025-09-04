@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from agent.tools import translate
 from fastapi.responses import StreamingResponse
 from fastapi import Query
+import asyncio
 
 app=FastAPI()
 
@@ -37,10 +38,10 @@ async def agent_endpoint(q:AgentQuery,stream:bool=Query(False)):
     if stream:
         async def token_generator():
             async for token in run_agent_stream(q):
-                yield token 
+                yield f"data: {token}\n\n"
                 await asyncio.sleep(0)
-                print("token")
-        return StreamingResponse(token_generator(),media_type="text/plain")
+            yield "data: [DONE]\n\n"
+        return StreamingResponse(token_generator(),media_type="text/event-stream")
     else:
         try:
         

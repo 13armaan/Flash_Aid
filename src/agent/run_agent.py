@@ -3,7 +3,7 @@ from core.models import AgentQuery,AgentAnswer,latencyEach
 import time
 import  asyncio
 
-lat=[]
+
 
 async def run_agent_stream(q:AgentQuery):
     search_task=asyncio.create_task( search_docs.retrieve(q.question))
@@ -11,11 +11,11 @@ async def run_agent_stream(q:AgentQuery):
     content,cites=await search_task
     prompt=await build_prompt.prompt(q.question,content)
 
-    async for token in call_llm.call_llm_stream(prompt,stream=True):
+    async for token in call_llm.call_llm_stream(prompt):
         yield token
     
 async def run_agent_normal(q:AgentQuery) ->AgentAnswer:
-   
+    lat=[]
     t0=time.perf_counter()
 
     search_task=asyncio.create_task( search_docs.retrieve(q.question))

@@ -8,6 +8,7 @@ import time
 import asyncio
 import httpx
 import threading
+import re
 
 st.title("AI Health Navigator")
 query = st.text_input("Your Question")
@@ -49,14 +50,32 @@ logger.add(
 def log_query(query,tool_used,latency):
     logger.info(f"tool={tool_used},latency={latency:.2f}s")
 
+def format_ans(text:str)->str:
+
+    text=re.sub(r"\s*•\s*",r"\n\n•",text)
+    text=re.sub(r"\s*–\s*",r"\n–",text)
+    text=re.sub(r"(\d+)\.\s*",r"\n\1.",text)
+    text=re.sub(r"\s*:\s*",r":\n\n",text)
+    text=re.sub(r"\s*>\s*",r"\n>",text)
+    
+    text=text.strip()
+    return text
+
 def fetch_stream(payload,placeholder):
     text=""
-    with httpx.stream("POST","http://localhost:8000/ask",json=payload,timeout=None)as r:
+    with requests.post("http://localhost:8000/ask?stream=true",json=payload,timeout=None,stream=True)as r:
         for line in r.iter_lines():
             if line:
-                chunk =line
-                text+=chunk
-                placeholder.text(text)
+                decoded =line.decode("utf-8")
+                if decoded.startswith("data: "):
+                    chunk= decoded.replace("data: ","")
+                    if chunk =="[DONE]":
+                        break
+                    text+=chunk
+                    formatted_ans=format_ans(text)
+                    
+                    placeholder.markdown(f"\n{formatted_ans}")
+
 consent=st.checkbox("Allow anonymized logging")
 
 blocklist=["suicide","self-harm"]
@@ -68,13 +87,14 @@ if st.button("Ask"):
         "target_lang":language,
         "lat":lat,"lon":lon
         }
+    placeholder=st.empty()
     print(payload)
     if any(word in query.lower() for word in blocklist):
         st.error("Cannot provide advice on this topic. Please seek professional help")
     if stream==True:
         t0=time.perf_counter()
-        placeholder=st.empty()
-        threading.Thread(target=fetch_stream,args=(payload,placeholder))
+        
+        fetch_stream(payload,placeholder)
         t1=time.perf_counter()
         st.write(t1-t0)
     else:

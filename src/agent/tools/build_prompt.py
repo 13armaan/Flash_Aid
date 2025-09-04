@@ -10,7 +10,7 @@ async def prompt(q:str,rows:list)->str:
         """
         You are a cautious health assistant. Answer clearly in bullet points
         Cite sources inline like[1], [2]. Add first-aid steps when relevant
-        Explicity say this is not medical advice
+        Explicity say this is not medical advice.Use • for headings. Dont use – for bullets instead use >
         """
     )
     return instructions +"\n\nContext:\n" + "\n\n".join(ctx) + f"\n\nQuestions:{q}\n"
