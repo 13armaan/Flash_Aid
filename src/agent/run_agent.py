@@ -18,7 +18,7 @@ def format_metadata(facilities,citations):
         for i,c in enumerate(citations,start=1):
             lines.append(f"[{i}] {c.title}")
             lines.append(f"{c.url}")
-
+        lines.append("")
     return "\n".join(lines)
 
 async def run_agent_stream(q:AgentQuery):
@@ -37,11 +37,14 @@ async def run_agent_stream(q:AgentQuery):
     if fac_task:
         facs=await fac_task
     async for token in call_llm.call_llm_stream(prompt):
-        yield token
+        yield {
+            "type":"token",
+            "content":token
+        }
     
     yield{
         "type":"metadata",
-        "content": f"```markdown\n{format_metadata(facs, cites)}\n```"
+        "content": f"\n{format_metadata(facs, cites)}\n"
     }
     
     

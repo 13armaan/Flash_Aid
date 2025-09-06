@@ -11,15 +11,18 @@ import threading
 import re
 import json
 
+stream=True
 st.title("AI Health Navigator")
 query = st.text_input("Your Question")
 location = st.text_input("Your Location(Optional if gps allowed)")
 language =st.selectbox("Language",["en","hi","bn"])
-
+if language!="en":
+    stream=False
+    st.write("Streaming option not available for translation")
 use_gps=st.checkbox("Use my GPS location")
 lat,lon=None,None
 
-stream=True
+
 
 if use_gps:
     coords=streamlit_js_eval(js_expressions="""
@@ -64,7 +67,7 @@ def format_ans(text:str)->str:
 
 def fetch_stream(payload,placeholder):
     text=""
-    
+    metadata_shown=False
     with requests.post("http://localhost:8000/ask?stream=true",json=payload,timeout=None,stream=True)as r:
       
         for line in r.iter_lines():
@@ -76,10 +79,11 @@ def fetch_stream(payload,placeholder):
                         break
                     try:
                         message=json.loads(chunk)
-                    except json.JSONDecodeError:
+                    except json.JSONDecodeError as e:
+                        print("JSON decode error:", e, "chunk=", chunk)
                         continue
                     if message["type"]=="token":
-                        text+=chunk
+                        text+=message["content"]
                         formatted_ans=format_ans(text)
                         placeholder.markdown(f"\n{formatted_ans}")
                     elif message["type"]=="metadata" and not metadata_shown:
