@@ -4,6 +4,7 @@ fastapi==0.116.1
 geopy==2.4.1
 uvicorn
 pymysql
+
 haversine==2.9.0
 httpx==0.28.1
 loguru==0.7.3

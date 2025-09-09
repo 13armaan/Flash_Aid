@@ -2,7 +2,7 @@ import json
 from core.models import step
 import os
 import asyncio
-DATA_PATH = os.path.join(os.path.dirname(__file__), "../../../data/first_aid.json")
+DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data','first_aid.json')
 
 with open(DATA_PATH,"r",encoding="utf-8") as f:
     db=json.load(f)

@@ -5,7 +5,6 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 from rich.console import Console
 from rich.markdown import Markdown
-from safety import is_dangerous, disclaimer
 import requests
 import traceback
 from core.models import citation

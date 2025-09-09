@@ -1,0 +1,5 @@
+streamlit
+requests
+loguru
+streamlit-js-eval
+httpx

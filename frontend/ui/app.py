@@ -68,7 +68,7 @@ def format_ans(text:str)->str:
 def fetch_stream(payload,placeholder):
     text=""
     metadata_shown=False
-    with requests.post("http://localhost:8000/ask?stream=true",json=payload,timeout=None,stream=True)as r:
+    with requests.post("https://aihealthnavigatorbackend-production.up.railway.app/ask?stream=true",json=payload,timeout=None,stream=True)as r:
       
         for line in r.iter_lines():
             if line:
@@ -112,7 +112,7 @@ if st.button("Ask"):
         t1=time.perf_counter()
         st.write(t1-t0)
     else:
-        resp=requests.post("http://localhost:8000/ask",json=payload)
+        resp=requests.post("https://aihealthnavigatorbackend-production.up.railway.app/ask",json=payload)
         if resp==None:
             st.write("Connected with backend but no data recieved")
         else:
@@ -127,7 +127,7 @@ if st.button("Ask"):
                     for f in data["facilities"]:
                          st.write(f"{f['name']} - {f['distance_km']} km [MAP]({f['map_url']})")
                 else:
-                    st.warning("No answer returned from Backend.")
+                    st.warning("No answer returned from  Backend.")
                 st.write("Citations:")
                 if "citations" in data:
                      for f in data["citations"]:
