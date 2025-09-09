@@ -11,15 +11,24 @@ import threading
 import re
 import json
 
-stream=True
-st.title("AI Health Navigator")
-query = st.text_input("Your Question")
-location = st.text_input("Your Location(Optional if gps allowed)")
-language =st.selectbox("Language",["en","hi","bn"])
-if language!="en":
-    stream=False
-    st.write("Streaming option not available for translation")
-use_gps=st.checkbox("Use my GPS location")
+stream=False
+st.set_page_config(layout="wide")
+
+col2,empty=st.columns([5,1])
+
+
+st.sidebar.image("../../assets/logo.png")
+st.sidebar.markdown("Your health, in a ⚡.")
+with col2:
+    st.title("Flash Aid")
+    st.write( "From symptoms to solutions - instantly with FlashAid.")
+    query = st.text_input("Your Question")
+    location = st.text_input("Your Location(Optional if gps allowed)")
+    language =st.selectbox("Language",["en","hi","bn"])
+    if language!="en":
+        stream=False
+        st.write("Streaming option not available for translation")
+    use_gps=st.checkbox("Use my GPS location")
 lat,lon=None,None
 
 
@@ -33,14 +42,14 @@ if use_gps:
         );   
     
     })""",key="get_coords")
+    with col2:
+        if coords:
+            lat,lon=coords.split(",")
+            st.write("Latitude:", lat)
+            st.write("Longitude:", lon)
 
-    if coords:
-        lat,lon=coords.split(",")
-        st.write("Latitude:", lat)
-        st.write("Longitude:", lon)
-           
-    else:
-        st.info("Please allow GPS access and reload if necessary.")
+        else:
+            st.info("Please allow GPS access and reload if necessary.")
 
 os.makedirs("logs", exist_ok=True)
 
@@ -68,7 +77,7 @@ def format_ans(text:str)->str:
 def fetch_stream(payload,placeholder):
     text=""
     metadata_shown=False
-    with requests.post("https://aihealthnavigatorbackend-production.up.railway.app/ask?stream=true",json=payload,timeout=None,stream=True)as r:
+    with requests.post("http://127.0.0.1:8000/ask?stream=true",json=payload,timeout=None,stream=True)as r:
       
         for line in r.iter_lines():
             if line:
@@ -89,59 +98,80 @@ def fetch_stream(payload,placeholder):
                     elif message["type"]=="metadata" and not metadata_shown:
                          st.markdown(message["content"])
 
-
-consent=st.checkbox("Allow anonymized logging")
+with col2:
+    consent=st.checkbox("Allow anonymized logging")
 
 blocklist=["suicide","self-harm"]
+with col2:
+    if st.button("Ask"):
+        payload={
+            "question":query,
+            "location_text":location,
+            "target_lang":language,
+            "lat":lat,"lon":lon
+            }
+        placeholder=st.empty()
+        print(payload)
+        if any(word in query.lower() for word in blocklist):
+            st.error("Cannot provide advice on this topic. Please seek professional help")
+        if stream==True:
+            t0=time.perf_counter()
 
-if st.button("Ask"):
-    payload={
-        "question":query,
-        "location_text":location,
-        "target_lang":language,
-        "lat":lat,"lon":lon
-        }
-    placeholder=st.empty()
-    print(payload)
-    if any(word in query.lower() for word in blocklist):
-        st.error("Cannot provide advice on this topic. Please seek professional help")
-    if stream==True:
-        t0=time.perf_counter()
-        
-        fetch_stream(payload,placeholder)
-        t1=time.perf_counter()
-        st.write(t1-t0)
-    else:
-        resp=requests.post("https://aihealthnavigatorbackend-production.up.railway.app/ask",json=payload)
-        if resp==None:
-            st.write("Connected with backend but no data recieved")
+            fetch_stream(payload,placeholder)
+            t1=time.perf_counter()
+            st.write(t1-t0)
         else:
-            data=resp.json()
-            if data:
-                if "answer" in data:
-                    st.write("Answer:", data["answer"])
-
-                facilities=data.get("facilities")
-                st.write("Nearby Facilities")
-                if facilities:
-                    for f in data["facilities"]:
-                         st.write(f"{f['name']} - {f['distance_km']} km [MAP]({f['map_url']})")
-                else:
-                    st.warning("No answer returned from  Backend.")
-                st.write("Citations:")
-                if "citations" in data:
-                     for f in data["citations"]:
-                         st.write(f"{f['title']} - {f['url']} ")
-                st.write("latency")
-                if "latency" in data:
-                    for f in data["latency"]:
-                         st.write(f"{f['title']} - {f['time']} ")
-
-
-
+            resp=requests.post("http://127.0.0.1:8000/ask",json=payload)
+            if resp==None:
+                st.write("Connected with backend but no data recieved")
             else:
-                st.warning("No Answer returned from backend.")
-    if consent:
-        log_query(query,"search_docs",0.12)  
+                data=resp.json()
+                if data:
+                    if "answer" in data:
+                        st.markdown("## 🤖 AI Response ##")
+                        st.markdown(data["answer"])
 
-st.warning("THIS IS NOT A SUBSTITUTE FOR PROFESSIONAL MEDICAL ADVICE. SEEK PROFFESINAL CARE WHEN NEEDED.")
+                    facilities=data.get("facilities")
+                    st.markdown("## 🏥 Nearby Facilities ##")
+                    if facilities:
+                        for f in data["facilities"]:
+                             st.markdown(f"""
+                              <div style="padding:15px; border-radius:15px; border-radius:12px solid #e0e0e0;box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom:10px; background-color:#130E33;color:#f9f9f9;">
+                             <b>🏥 {f['name']} ({f['distance_km']}) km </b><br>
+                             📍<a href="({f['map_url']})" >View on Map</a><br>
+                             """,
+                             unsafe_allow_html=True
+                             )
+                    else:
+                        st.warning("No answer returned from  Backend.")
+                    st.markdown("## 📚 References ##")
+                    with st.expander("show references"):
+                        if "citations" in data:
+                             for f in data["citations"]:
+                                 st.write(f"{f['title']} - {f['url']} ")
+                    st.write("latency")
+                    if "latency" in data:
+                        for f in data["latency"]:
+                             st.write(f"{f['title']} - {f['time']} ")
+
+
+
+                else:
+                    st.warning("No Answer returned from backend.")
+        if consent:
+            log_query(query,"search_docs",0.12)  
+    import streamlit as st
+
+    st.markdown(
+    """
+    <div style="background-color: #b58900; padding: 12px; border-radius: 6px; 
+                text-align: center; font-weight: bold; color: black;">
+        ⚠️ THIS IS NOT A SUBSTITUTE FOR PROFESSIONAL MEDICAL ADVICE. 
+        SEEK PROFESSIONAL CARE WHEN NEEDED.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+    
