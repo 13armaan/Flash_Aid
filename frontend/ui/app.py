@@ -12,12 +12,14 @@ import re
 import json
 
 stream=True
+BASE_DIR = os.path.dirname(__file__)
+logo_path = os.path.join(BASE_DIR, "logo.png")
 st.set_page_config(layout="wide")
 
 col2,empty=st.columns([5,1])
 
 
-st.sidebar.image("../../assets/logo.png")
+st.sidebar.image(logo_path)
 st.sidebar.markdown("Your health, in a ⚡.")
 with col2:
     st.title("Flash Aid")
@@ -144,10 +146,12 @@ with col2:
             t1=time.perf_counter()
             st.write(t1-t0)
         else:
+            t0=time.perf_counter()
             resp=requests.post("http://127.0.0.1:8000/ask",json=payload)
             if resp==None:
                 st.write("Connected with backend but no data recieved")
             else:
+                
                 data=resp.json()
                 if data:
                     if "answer" in data:
@@ -172,12 +176,13 @@ with col2:
                         if "citations" in data:
                              for f in data["citations"]:
                                  st.write(f"{f['title']} - {f['url']} ")
-                    st.write("latency")
-                    if "latency" in data:
-                        for f in data["latency"]:
-                             st.write(f"{f['title']} - {f['time']} ")
+                    #st.write("latency")
+                    #if "latency" in data:
+                    #    for f in data["latency"]:
+                    #         st.write(f"{f['title']} - {f['time']} ")
 
-
+                    t1=time.perf_counter()
+                    st.write(t1-t0)
 
                 else:
                     st.warning("No Answer returned from backend.")

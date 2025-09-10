@@ -93,7 +93,7 @@ The AI will:
 ## 💡 Sample Query
 
 **Input:**  
-`I have fever and joint pain in Delhi`  
+`I have fever and joint pain in Delhi Answer needed in Hindi`  
 
 **AI Output:**  
 -The Ai tool will provide with the advice related to the query by the user.
@@ -101,7 +101,8 @@ Includes:-
 -Answer 
 -First aid steps
 -Nearby Facilities
--citations
+-Citations
+-Translated answer
 
 ![Sample Screenshot](./assets/demo/demo1.png)
 ![Sample Screenshot](./assets/demo/demo2.png)
