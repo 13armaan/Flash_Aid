@@ -11,7 +11,7 @@ import threading
 import re
 import json
 
-stream=False
+stream=True
 st.set_page_config(layout="wide")
 
 col2,empty=st.columns([5,1])
@@ -94,9 +94,32 @@ def fetch_stream(payload,placeholder):
                     if message["type"]=="token":
                         text+=message["content"]
                         formatted_ans=format_ans(text)
-                        placeholder.markdown(f"\n{formatted_ans}")
+                        
+                        placeholder.markdown(f"## 🤖 AI Response ##\n\n{formatted_ans}")
                     elif message["type"]=="metadata" and not metadata_shown:
-                         st.markdown(message["content"])
+                        data=message["content"]
+                        facilities=data.get("facilities",[])
+                        citations=data.get("citations",[])
+
+                        if facilities:
+                            st.markdown("## 🏥 Nearby Facilities ##")
+                            for f in facilities:
+                                st.markdown(
+                                    f"""
+                                  <div style="padding:15px; border-radius:15px; border-radius:12px solid #e0e0e0;box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom:10px; background-color:#130E33;color:#f9f9f9;">
+                                 <b>🏥 {f['name']} ({f['distance_km']}) km </b><br>
+                                 📍<a href="({f['map_url']})" >View on Map</a><br>
+                                 </div>
+                                 """,
+                                 unsafe_allow_html=True
+                                )
+                        if citations:     
+                            st.markdown("## 📚 References ##")
+                            with st.expander("show references"):
+                                         for c in citations:
+                                            st.markdown(f"{c['title']} - {c['url']} ")
+                        
+                        metadata_shown=True
 
 with col2:
     consent=st.checkbox("Allow anonymized logging")

@@ -7,14 +7,14 @@ import  asyncio
 def format_metadata(facilities,citations):
     lines=[]
     if facilities:
-        lines.append("📍 Nearby Facilities:")
+        lines.append("## 🏥 Nearby Facilities ##\n")
         for i, f in enumerate(facilities,start=1):
-            lines.append(f"{i}. {f.name} ({f.distance_km} km)")
-            lines.append(f"{f.map_url}")
+            lines.append(f" 🏥 {i}. {f.name} ({f.distance_km} km)\n")
+            lines.append(f"[View on map]({f.map_url})\n")
         lines.append("")
     
     if citations:
-        lines.append("📖 Citations:")
+        lines.append("## 📚 References ##\n")
         for i,c in enumerate(citations,start=1):
             lines.append(f"[{i}] {c.title}")
             lines.append(f"{c.url}")
@@ -44,7 +44,10 @@ async def run_agent_stream(q:AgentQuery):
     
     yield{
         "type":"metadata",
-        "content": f"\n{format_metadata(facs, cites)}\n"
+        "content": {
+            "facilities":[f.dict() for f in facs] if facs else [],
+            "citations":[c.dict() for c in cites] if cites else []
+        }
     }
     
     
