@@ -33,12 +33,15 @@ User → Streamlit UI → FastAPI Agent → TiDB Vector Search → LLM → Trans
 ![Overpass API](https://img.shields.io/badge/Overpass%20API-000000?logo=openstreetmap&logoColor=white)
 ![Geopy](https://img.shields.io/badge/Geopy-3776AB?logo=python&logoColor=white)
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?logo=openai&logoColor=white)
+![argos-translate](https://img.shields.io/badge/argos-translate)
+
 
 - **Frontend:** Streamlit  
 - **Backend:** FastAPI  
 - **Vector DB:** TiDB Vector Search  
 - **Maps / Facilities:** OpenStreetMap + Overpass API + Geopy  
-- **AI/LLM:** OpenAI (for reasoning + multilingual support)  
+- **AI/LLM:** Moonshot AI (for reasoning)  
+- **Multilingual support:** Argos Translate  
 ---
 ## 🔍 Why TiDB Vector Search?
 
@@ -53,6 +56,10 @@ AI Health Navigator uses **TiDB Vector Search** to power retrieval-augmented gen
 - 📈 **Future-Proof & Scalable**  
   TiDB can scale seamlessly to handle more documents, languages, and regional datasets as the project grows.  
 ---
+##Features
+Semantic Search(TiDB Vector Search)
+Multilingual support
+Nearby Facility finder
 ## ⚙️ Installation
 
 Clone the repository:
@@ -93,8 +100,8 @@ The AI will:
 ## 💡 Sample Query
 
 **Input:**  
-`I have fever and joint pain in Delhi Answer needed in Hindi`  
-
+`I have fever and joint pain`  
+`GPS location`
 **AI Output:**  
 -The Ai tool will provide with the advice related to the query by the user.
 Includes:-

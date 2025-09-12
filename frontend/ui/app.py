@@ -180,7 +180,7 @@ with col2:
                     #if "latency" in data:
                     #    for f in data["latency"]:
                     #         st.write(f"{f['title']} - {f['time']} ")
-
+                    # for debugging
                     t1=time.perf_counter()
                     st.write(t1-t0)
 
