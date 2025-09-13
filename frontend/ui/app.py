@@ -79,7 +79,7 @@ def format_ans(text:str)->str:
 def fetch_stream(payload,placeholder):
     text=""
     metadata_shown=False
-    with requests.post("http://127.0.0.1:8000/ask?stream=true",json=payload,timeout=None,stream=True)as r:
+    with requests.post("https://flashaid-production.up.railway.app/ask?stream=true",json=payload,timeout=None,stream=True)as r:
       
         for line in r.iter_lines():
             if line:
@@ -147,9 +147,9 @@ with col2:
             st.write(t1-t0)
         else:
             t0=time.perf_counter()
-            resp=requests.post("http://127.0.0.1:8000/ask",json=payload)
+            resp=requests.post("https://flashaid-production.up.railway.app/ask",json=payload)
             if resp==None:
-                st.write("Connected with backend but no data recieved")
+                st.write("Connected with backend  but no data recieved")
             else:
                 
                 data=resp.json()
