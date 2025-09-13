@@ -110,7 +110,7 @@ def fetch_stream(payload,placeholder):
                                     f"""
                                   <div style="padding:15px; border-radius:15px; border-radius:12px solid #e0e0e0;box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom:10px; background-color:#130E33;color:#f9f9f9;">
                                  <b>🏥 {f['name']} ({f['distance_km']}) km </b><br>
-                                 📍<a href="({f['map_url']})" >View on Map</a><br>
+                                 📍<a href="{f['map_url']}" >View on Map</a><br>
                                  </div>
                                  """,
                                  unsafe_allow_html=True
@@ -165,7 +165,7 @@ with col2:
                              st.markdown(f"""
                               <div style="padding:15px; border-radius:15px; border-radius:12px solid #e0e0e0;box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom:10px; background-color:#130E33;color:#f9f9f9;">
                              <b>🏥 {f['name']} ({f['distance_km']}) km </b><br>
-                             📍<a href="({f['map_url']})" >View on Map</a><br>
+                             📍<a href="{f['map_url']}" >View on Map</a><br>
                              """,
                              unsafe_allow_html=True
                              )

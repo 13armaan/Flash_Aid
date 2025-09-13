@@ -14,7 +14,7 @@ Millions of people in underserved areas lack:
 - Accessible medical guidance in **local languages**  
 - Information about **nearby hospitals and clinics**  
 
-👉 **AI Health Navigator** bridges this gap with instant AI-driven health navigation + facility lookup.
+👉 **Flash Aid** bridges this gap with instant AI-driven health navigation + facility lookup.
 
 ---
 
