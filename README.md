@@ -67,17 +67,20 @@ Clone the repository:
 ```bash
 git clone https://github.com/13armaan/Flash_Aid.git
 cd Flash_Aid
-
+#Use virtual environment
 #Backend Setup(FastAPI)
 cd backend
 pip install -r requirements.txt
-uvicorn main:app --reload
+cd api
+uvicorn main:app --reload --port 8000
 
 #Frontend Setup(Streamlit)
 cd frontend
 cd ui
 pip install -r requirements.txt
 streamlit run app.py
+#app.py is connected to deployed backend https://flashaid-production.up.railway.app/ask, if u want to test locally use http://127.0.0.1:8000/ask
+#requirements in backend and frontend/ui are different so need to install 2 times
 ```
 ---
 ##▶️ Usage Instructions

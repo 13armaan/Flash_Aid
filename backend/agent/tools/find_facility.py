@@ -20,7 +20,10 @@ async def lookup(location_text:str=None,lat:float=None,lon:float=None):
     node["amenity"~"clinic|hospital"](around:5000,{lat},{lon});
     out center;
 """
-    res=overpass.query(query)
+    try:
+        res=overpass.query(query)
+    except Exception as e:
+        return[]
     out=[]
     for node in res.nodes:
         d=haversine((lat,lon),(node.lat,node.lon))

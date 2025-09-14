@@ -20,7 +20,8 @@ col2,empty=st.columns([5,1])
 
 
 st.sidebar.image(logo_path)
-st.sidebar.markdown("Your health, in a ⚡.")
+st.sidebar.markdown("Your Health, in a ⚡.")
+st.sidebar.markdown("Saving Lives Just a Click Away")
 with col2:
     st.title("Flash Aid")
     st.write( "From symptoms to solutions - instantly with FlashAid.")
@@ -123,12 +124,15 @@ def fetch_stream(payload,placeholder):
                         
                         metadata_shown=True
 
-with col2:
-    consent=st.checkbox("Allow anonymized logging")
+#with col2:
+#    consent=st.checkbox("Allow anonymized logging")
 
 blocklist=["suicide","self-harm"]
 with col2:
     if st.button("Ask"):
+        if query=="":
+            st.error("Please enter your symptoms")
+            st.stop()
         payload={
             "question":query,
             "location_text":location,
@@ -139,7 +143,8 @@ with col2:
         print(payload)
         if any(word in query.lower() for word in blocklist):
             st.error("Cannot provide advice on this topic. Please seek professional help")
-        if stream==True:
+            st.stop()
+        elif stream==True:
             t0=time.perf_counter()
 
             fetch_stream(payload,placeholder)
@@ -186,9 +191,9 @@ with col2:
 
                 else:
                     st.warning("No Answer returned from backend.")
-        if consent:
-            log_query(query,"search_docs",0.12)  
-    import streamlit as st
+        #if consent:
+        #    log_query(query,"search_docs",0.12)  
+    
 
     st.markdown(
     """
